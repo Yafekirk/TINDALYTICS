@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+:root {
+  --navy: #1b365d;
+  --primary: #005a9c;
+  --primary-hover: #1b365d;
+  --accent: #60c1e5;
+  --accent-soft: #a0e0ef;
+  --dark-slate: #1b365d;
+  /* Darker secondary for readable body/muted text on light backgrounds */
+  --secondary: #3d5166;
+  --page: #f3fafc;
+  --card: #ffffff;
+  --border: #c5dbe6;
+  --success: #005a9c;
+  --warning: #b45309;
+  --danger: #dc2626;
+  --info: #0284c7;
+  --background: var(--page);
+  --foreground: var(--navy);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-navy: var(--navy);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-dark-slate: var(--dark-slate);
+  --color-secondary: var(--secondary);
+  --color-page: var(--page);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+  --font-sans: var(--font-inter);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--page);
+  color: var(--navy);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 45%, white);
+  color: var(--navy);
+}
+
+/* Do not set color: inherit — it overrides text-white on primary buttons/links */
+a {
+  text-decoration: none;
+}
+
+@media print {
+  body {
+    background: white !important;
+  }
+
+  aside,
+  header,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+  }
+}
