@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getCurrentStoreContext } from "@/lib/auth/session";
+import { getProfile } from "@/lib/services/profile";
+import { getUnreadNotificationCount } from "@/lib/services/notifications";
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -13,14 +15,21 @@ async function DashboardLayoutContent({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { user, store, role } = await getCurrentStoreContext();
+  const { supabase, user, store, role } = await getCurrentStoreContext();
+  const [profile, unreadNotifications] = await Promise.all([
+    getProfile(user.id),
+    store
+      ? getUnreadNotificationCount(supabase, store.id, user.id)
+      : Promise.resolve(0),
+  ]);
 
   return (
     <DashboardShell
       user={{
         id: user.id,
-        email: user.email ?? "",
+        email: user.email ?? profile?.email ?? "",
         fullName:
+          profile?.fullName ??
           (user.user_metadata?.full_name as string | undefined) ??
           user.email ??
           "User",
@@ -35,6 +44,7 @@ async function DashboardLayoutContent({
           : null
       }
       role={role}
+      unreadNotifications={unreadNotifications}
     >
       {children}
     </DashboardShell>

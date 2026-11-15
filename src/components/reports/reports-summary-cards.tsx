@@ -1,11 +1,11 @@
 import {
-  CircleDollarSign,
   Receipt,
   TrendingDown,
   TrendingUp,
   Wallet,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { PesoIcon } from "@/components/ui/peso-icon";
 import { formatCurrency } from "@/lib/utils/currency";
 import { formatNumber } from "@/lib/utils/format";
 import type { ReportSummary } from "@/types/reports";
@@ -20,7 +20,7 @@ export function ReportsSummaryCards({ summary }: ReportsSummaryCardsProps) {
       label: "Revenue",
       value: formatCurrency(summary.revenue),
       hint: `${formatNumber(summary.transactions)} transactions`,
-      icon: CircleDollarSign,
+      icon: PesoIcon,
       tone: "bg-primary/10 text-primary",
     },
     {

@@ -2,21 +2,23 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   Boxes,
-  CircleDollarSign,
   PackageX,
   Receipt,
   TrendingUp,
   Warehouse,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import type { ComponentType, SVGProps } from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import { PesoIcon } from "@/components/ui/peso-icon";
 import { formatCurrency } from "@/lib/utils/currency";
 import { formatNumber } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 import type { KpiMetric } from "@/types/dashboard";
 
-const iconMap: Record<string, LucideIcon> = {
-  "today-sales": CircleDollarSign,
+type IconComponent = ComponentType<SVGProps<SVGSVGElement> & { className?: string }>;
+
+const iconMap: Record<string, IconComponent> = {
+  "today-sales": PesoIcon,
   "today-transactions": Receipt,
   "total-products": Boxes,
   "inventory-value": Warehouse,
@@ -37,7 +39,7 @@ type KpiCardProps = {
 };
 
 export function KpiCard({ metric }: KpiCardProps) {
-  const Icon = iconMap[metric.id] ?? CircleDollarSign;
+  const Icon = iconMap[metric.id] ?? PesoIcon;
   const isPositive = metric.change >= 0;
   const formattedValue =
     metric.format === "currency"

@@ -14,9 +14,15 @@ type HeaderProps = {
   pathname: string;
   onMenuClick: () => void;
   user: AuthUserInfo;
+  unreadNotifications?: number;
 };
 
-export function Header({ pathname, onMenuClick, user }: HeaderProps) {
+export function Header({
+  pathname,
+  onMenuClick,
+  user,
+  unreadNotifications = 0,
+}: HeaderProps) {
   const [profileOpen, setProfileOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const title = pageTitles[pathname] ?? "Tindalytics";
@@ -72,10 +78,16 @@ export function Header({ pathname, onMenuClick, user }: HeaderProps) {
           <Link
             href="/notifications"
             className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl text-secondary transition-all duration-200 hover:bg-accent-soft/60 hover:text-primary hover:scale-105"
-            aria-label="Notifications"
+            aria-label={
+              unreadNotifications > 0
+                ? `Notifications (${unreadNotifications} unread)`
+                : "Notifications"
+            }
           >
             <Bell className="h-5 w-5" />
-            <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-danger ring-2 ring-white" />
+            {unreadNotifications > 0 ? (
+              <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-danger ring-2 ring-white" />
+            ) : null}
           </Link>
 
           <div className="relative" ref={menuRef}>

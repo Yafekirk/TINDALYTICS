@@ -1,11 +1,11 @@
 import {
-  CircleDollarSign,
   PackageX,
   Receipt,
   TrendingUp,
   Wallet,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { PesoIcon } from "@/components/ui/peso-icon";
 import { formatCurrency } from "@/lib/utils/currency";
 import { formatNumber } from "@/lib/utils/format";
 import type { AiInsightsSnapshot } from "@/types/ai-insights";
@@ -20,7 +20,7 @@ export function AiSnapshotCards({ snapshot }: AiSnapshotCardsProps) {
       label: "Revenue (30d)",
       value: formatCurrency(snapshot.summary.revenue),
       hint: `${formatNumber(snapshot.summary.transactions)} transactions`,
-      icon: CircleDollarSign,
+      icon: PesoIcon,
       tone: "bg-primary/10 text-primary",
     },
     {

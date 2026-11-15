@@ -1,5 +1,6 @@
-import { Ban, CircleDollarSign, Receipt, RotateCcw } from "lucide-react";
+import { Ban, Receipt, RotateCcw } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { PesoIcon } from "@/components/ui/peso-icon";
 import { formatCurrency } from "@/lib/utils/currency";
 import { formatNumber } from "@/lib/utils/format";
 import type { SaleSummary } from "@/types/sales";
@@ -12,7 +13,7 @@ const cards = [
   {
     key: "completedSales",
     label: "Completed sales",
-    icon: CircleDollarSign,
+    icon: PesoIcon,
     tone: "bg-primary/10 text-primary",
     format: "currency" as const,
   },
@@ -26,7 +27,7 @@ const cards = [
   {
     key: "averageTicket",
     label: "Average ticket",
-    icon: CircleDollarSign,
+    icon: PesoIcon,
     tone: "bg-slate-100 text-navy",
     format: "currency" as const,
   },

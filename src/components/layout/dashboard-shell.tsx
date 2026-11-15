@@ -12,6 +12,7 @@ type DashboardShellProps = {
   user: AuthUserInfo;
   store: AuthStoreInfo | null;
   role: string | null;
+  unreadNotifications?: number;
 };
 
 export function DashboardShell({
@@ -19,6 +20,7 @@ export function DashboardShell({
   user,
   store,
   role,
+  unreadNotifications = 0,
 }: DashboardShellProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
@@ -46,6 +48,7 @@ export function DashboardShell({
           pathname={pathname}
           onMenuClick={() => setMobileOpen(true)}
           user={user}
+          unreadNotifications={unreadNotifications}
         />
         <main className="px-4 py-6 sm:px-6 lg:px-8">{children}</main>
       </div>
