@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { colors } from "@/config/brand";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -195,6 +196,7 @@ export async function getDashboardData(
   role: string | null,
   periodInput?: string | null,
 ): Promise<DashboardData> {
+  await connection();
   const supabase = await createClient();
   const period = resolveDashboardPeriod(periodInput);
   const now = new Date();

@@ -10,8 +10,10 @@ const supabaseHostname = (() => {
 })();
 
 const nextConfig: NextConfig = {
-  cacheComponents: true,
-  partialPrefetching: true,
+  // Disabled: Cache Components + Date.now()/new Date() in dashboard data
+  // was causing continuous /dashboard refetch loops in dev ("Rendering...").
+  // Re-enable after request-time date reads are fully isolated behind connection()/io().
+  cacheComponents: false,
   images: {
     remotePatterns: supabaseHostname
       ? [

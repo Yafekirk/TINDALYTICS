@@ -1,14 +1,10 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { connection } from "next/server";
 import { DashboardPage } from "@/components/dashboard/dashboard-page";
 import { DashboardSkeleton } from "@/components/dashboard/dashboard-skeleton";
 import { getCurrentStoreContext } from "@/lib/auth/session";
 import { getDashboardData } from "@/lib/services/dashboard";
-
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -23,6 +19,7 @@ async function DashboardContent({
 }: {
   searchParams: Promise<{ period?: string }>;
 }) {
+  await connection();
   const params = await searchParams;
   const { user, store, role } = await getCurrentStoreContext();
 

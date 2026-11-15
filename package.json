@@ -11,9 +11,13 @@
     "test": "node --experimental-strip-types --test src/lib/utils/money.test.ts"
   },
   "dependencies": {
+    "@ai-sdk/google": "^4.0.121",
+    "@ai-sdk/openai": "^4.0.118",
+    "@ai-sdk/react": "^4.0.177",
     "@hookform/resolvers": "^7.0.6",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.119.0",
+    "ai": "^7.0.173",
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
     "lucide-react": "^1.73.0",

@@ -1,20 +1,18 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getCurrentStoreContext } from "@/lib/auth/session";
 import { getProfile } from "@/lib/services/profile";
 import { getUnreadNotificationCount } from "@/lib/services/notifications";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
-
 async function DashboardLayoutContent({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Request-time boundary so Date.now()/new Date() in dashboard data never runs during prerender.
+  await connection();
   const { supabase, user, store, role } = await getCurrentStoreContext();
   const [profile, unreadNotifications] = await Promise.all([
     getProfile(user.id),

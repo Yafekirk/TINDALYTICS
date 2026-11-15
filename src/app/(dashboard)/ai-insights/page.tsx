@@ -4,14 +4,9 @@ import { AiDataPanels } from "@/components/ai-insights/ai-data-panels";
 import { AiInsightsPanel } from "@/components/ai-insights/ai-insights-panel";
 import { AiSnapshotCards } from "@/components/ai-insights/ai-snapshot-cards";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getOpenAiConfig } from "@/lib/ai/env";
+import { getAiProviderConfig } from "@/lib/ai/provider";
 import { getCurrentStoreContext } from "@/lib/auth/session";
 import { getAiInsightsSnapshot } from "@/lib/services/ai-insights";
-
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
 
 export const metadata: Metadata = { title: "AI Insights" };
 
@@ -27,7 +22,7 @@ async function AiInsightsContent() {
   }
 
   const snapshot = await getAiInsightsSnapshot(store.id, store.name);
-  const openAi = getOpenAiConfig();
+  const ai = getAiProviderConfig();
 
   return (
     <div className="space-y-6">
@@ -43,7 +38,7 @@ async function AiInsightsContent() {
 
       <AiInsightsPanel
         snapshot={snapshot}
-        initiallyConfigured={openAi.configured}
+        initiallyConfigured={ai.configured}
       />
 
       <section className="space-y-3">

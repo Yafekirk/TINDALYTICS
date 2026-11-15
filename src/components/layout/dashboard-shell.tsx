@@ -1,11 +1,18 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
 import { cn } from "@/lib/utils/cn";
 import type { AuthStoreInfo, AuthUserInfo } from "@/types/auth";
+
+const ChatWidget = dynamic(
+  () =>
+    import("@/components/chat/chat-widget").then((mod) => mod.ChatWidget),
+  { ssr: false },
+);
 
 type DashboardShellProps = {
   children: ReactNode;
@@ -51,6 +58,7 @@ export function DashboardShell({
           unreadNotifications={unreadNotifications}
         />
         <main className="px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+        <ChatWidget />
       </div>
     </div>
   );

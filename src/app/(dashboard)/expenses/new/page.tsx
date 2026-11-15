@@ -12,11 +12,6 @@ import {
 import { getCurrentStoreContext } from "@/lib/auth/session";
 import { manilaDayKey } from "@/lib/utils/timezone";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
-
 export const metadata: Metadata = { title: "Add expense" };
 
 export default async function NewExpensePage() {

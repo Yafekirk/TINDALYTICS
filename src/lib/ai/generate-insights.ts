@@ -1,5 +1,5 @@
-import { createOpenAiJsonCompletion } from "@/lib/ai/openai";
-import { getOpenAiConfig } from "@/lib/ai/env";
+import { generateText } from "ai";
+import { getAiProviderConfig } from "@/lib/ai/provider";
 import { parseAiGeneratedInsights } from "@/lib/validations/ai-insights";
 import type {
   AiInsightsResponse,
@@ -55,10 +55,28 @@ ${JSON.stringify(snapshot, null, 2)}
 Produce the JSON insights now.`;
 }
 
+function extractJsonObject(text: string): unknown {
+  const trimmed = text.trim();
+  try {
+    return JSON.parse(trimmed);
+  } catch {
+    const fenced = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/i);
+    if (fenced?.[1]) {
+      return JSON.parse(fenced[1].trim());
+    }
+    const start = trimmed.indexOf("{");
+    const end = trimmed.lastIndexOf("}");
+    if (start >= 0 && end > start) {
+      return JSON.parse(trimmed.slice(start, end + 1));
+    }
+    throw new Error("No JSON object found in model response.");
+  }
+}
+
 export async function generateAiInsights(
   snapshot: AiInsightsSnapshot,
 ): Promise<AiInsightsResponse> {
-  const config = getOpenAiConfig();
+  const config = getAiProviderConfig();
 
   if (!config.configured) {
     return {
@@ -77,48 +95,57 @@ export async function generateAiInsights(
     };
   }
 
-  const completion = await createOpenAiJsonCompletion({
-    apiKey: config.apiKey,
-    model: config.model,
-    messages: [
-      { role: "system", content: buildSystemPrompt() },
-      { role: "user", content: buildUserPrompt(snapshot) },
-    ],
-  });
-
-  if ("error" in completion) {
-    return {
-      status: "error",
-      message: completion.error,
-      snapshot,
-    };
-  }
-
-  let parsedJson: unknown;
   try {
-    parsedJson = JSON.parse(completion.content);
-  } catch {
+    const result = await generateText({
+      model: config.languageModel,
+      temperature: 0.3,
+      system: buildSystemPrompt(),
+      prompt: buildUserPrompt(snapshot),
+    });
+
+    const content = result.text?.trim();
+    if (!content) {
+      return {
+        status: "error",
+        message: "AI returned an empty response.",
+        snapshot,
+      };
+    }
+
+    let parsedJson: unknown;
+    try {
+      parsedJson = extractJsonObject(content);
+    } catch {
+      return {
+        status: "error",
+        message: "AI returned invalid JSON. Please try generating again.",
+        snapshot,
+      };
+    }
+
+    const validated = parseAiGeneratedInsights(parsedJson);
+    if (!validated.success) {
+      return {
+        status: "error",
+        message: `AI response validation failed: ${validated.error}`,
+        snapshot,
+      };
+    }
+
+    return {
+      status: "ok",
+      source: config.provider,
+      model: config.model,
+      snapshot,
+      insights: validated.data,
+    };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Unable to generate AI insights.";
     return {
       status: "error",
-      message: "AI returned invalid JSON. Please try generating again.",
+      message,
       snapshot,
     };
   }
-
-  const validated = parseAiGeneratedInsights(parsedJson);
-  if (!validated.success) {
-    return {
-      status: "error",
-      message: `AI response validation failed: ${validated.error}`,
-      snapshot,
-    };
-  }
-
-  return {
-    status: "ok",
-    source: "openai",
-    model: config.model,
-    snapshot,
-    insights: validated.data,
-  };
 }

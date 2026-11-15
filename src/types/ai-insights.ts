@@ -100,7 +100,7 @@ export type AiInsightsSnapshot = {
 export type AiInsightsResponse =
   | {
       status: "ok";
-      source: "openai";
+      source: "gemini" | "openai";
       model: string;
       snapshot: AiInsightsSnapshot;
       insights: AiGeneratedInsights;

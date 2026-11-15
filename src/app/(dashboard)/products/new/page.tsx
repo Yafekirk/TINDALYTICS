@@ -3,11 +3,6 @@ import { ProductForm } from "@/components/products/product-form";
 import { getCurrentStoreContext } from "@/lib/auth/session";
 import { listCategories, listSuppliers } from "@/lib/services/products";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
-
 export const metadata: Metadata = { title: "Add Product" };
 
 export default async function NewProductPage() {
